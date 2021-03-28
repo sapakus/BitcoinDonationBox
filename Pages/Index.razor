@@ -1,0 +1,38 @@
+﻿@page "/"
+@using QRCoder;
+@using System;
+@using Microsoft.Extensions.Configuration;
+@inject IConfiguration Configuration;
+
+@foreach (var cause in allCauses)
+{
+    <h1> @cause.Title </h1>
+    <h4> @cause.Description </h4>
+    <img src="@cause.QrCodeStr" style="width:200px;height:200px;" />
+    <h5> @cause.BitcoinAddress </h5>
+    <hr />
+    <br />
+}
+
+@code{
+    List<Cause> allCauses;
+    protected override void OnInitialized()
+    {
+        allCauses = Configuration.GetSection("Causes").Get<List<Cause>>();
+    }
+    public class Cause
+    {
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string BitcoinAddress { get; set; }
+        public string QrCodeStr
+        {
+            get
+            {
+                return "data:image/png;base64," + Convert.ToBase64String(new PngByteQRCode((new
+                    QRCodeGenerator()).CreateQrCode(BitcoinAddress.ToString(), QRCodeGenerator.ECCLevel.Q)).GetGraphic(20));
+            }
+        }
+    }
+
+}

@@ -1,0 +1,16 @@
+@using Microsoft.Extensions.Configuration;
+@inject IConfiguration Configuration;
+@inherits LayoutComponentBase
+
+<div class="page">
+    <div class="main">
+        <div class="top-row px-4">
+            <h1>@Configuration["Organization"]</h1>
+            <a href=@Configuration["OrganizationWebsite"] target="_blank" class="ml-md-auto">About</a>
+        </div>
+
+        <div class="content px-4">
+            @Body
+        </div>
+    </div>
+</div>
